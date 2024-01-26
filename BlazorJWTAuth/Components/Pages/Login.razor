@@ -1,0 +1,62 @@
+@page "/login"
+@using BlazorJWTAuth.Models
+@using BlazorJWTAuth.Auth
+@rendermode InteractiveServer
+
+<h1>Login</h1>
+<p class="text-danger">@_message</p>
+<EditForm FormName="Login" method="POST" Model="@Input" OnValidSubmit="LoginUser">
+    <DataAnnotationsValidator/>
+    <p>Login</p>
+    @* <InputText id="login" @bind="@Input.Login"/> *@
+    <input id="login" @bind="@Input.Login"/>
+    <ValidationMessage For="@(() => Input.Login)"/>
+    <p>Password</p>
+    @* <InputText id="password" @bind="@Input.Password"/> *@
+    <input id="password" @bind="@Input.Password" type="password"/>
+    <ValidationMessage For="@(() => Input.Password)"/>
+    <button>Sign In</button>
+</EditForm>
+
+@code {
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = default!;
+    
+    [Inject]
+    private AppAuthenticationStateProvider AuthStateProvider { get; set; } = default!;
+
+    private string _message = string.Empty;
+
+    public LoginModel Input { get; set; } = new();
+
+    private async Task LoginUser()
+    {
+        // var requestContent = new StringContent(JsonSerializer.Serialize(Input));
+        // requestContent.Headers.Clear();
+        // requestContent.Headers.Add("Content-Type", "application/json");
+        //
+        // var result = await HttpClient.PostAsync($"{NavigationManager.BaseUri}api/auth/sign_in", requestContent);
+        //
+        // if (!result.IsSuccessStatusCode)
+        // {
+        //     _message = "Error while sending sign in request.";
+        //     return;
+        // }
+        //
+        // var contentString = await result.Content.ReadAsStringAsync();
+        //
+        // var resultModel = JsonConvert.DeserializeObject<LoginResult>(contentString);
+        //
+        // if (!resultModel.Success)
+        // {
+        //     _message = resultModel.Message;
+        // }
+        //
+        // NavigationManager.NavigateTo($"api/authenticate/{resultModel.Token}");
+        // Console.WriteLine("Success");
+        await AuthStateProvider.LoginAsync(Input.Login, Input.Password);
+        NavigationManager.NavigateTo("/");
+    }
+
+}
