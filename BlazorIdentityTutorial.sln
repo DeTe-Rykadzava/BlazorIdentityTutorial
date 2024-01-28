@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorIdentityTutorial", "B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorJWTAuth", "BlazorJWTAuth\BlazorJWTAuth.csproj", "{297C613D-5C83-4ED7-8C69-292E1E51D7D4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAuthBlz", "TestAuthBlz\TestAuthBlz.csproj", "{F916A46D-2890-48B1-8423-1D68B1DFAB4E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{297C613D-5C83-4ED7-8C69-292E1E51D7D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{297C613D-5C83-4ED7-8C69-292E1E51D7D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{297C613D-5C83-4ED7-8C69-292E1E51D7D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F916A46D-2890-48B1-8423-1D68B1DFAB4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F916A46D-2890-48B1-8423-1D68B1DFAB4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F916A46D-2890-48B1-8423-1D68B1DFAB4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F916A46D-2890-48B1-8423-1D68B1DFAB4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

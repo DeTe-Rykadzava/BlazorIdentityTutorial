@@ -10,11 +10,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddServerSideBlazor();
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
 
-builder.Services.AddScoped<AuthenticationDataMemoryStorage>();
-builder.Services.AddScoped<UserService>();
+builder.Services.AddAuthentication();
+
+builder.Services.AddScoped<LocalStorageService>();
+builder.Services.AddScoped<AuthUserService>();
 builder.Services.AddScoped<AppAuthenticationStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(sp => sp.GetRequiredService<AppAuthenticationStateProvider>());
 builder.Services.AddAuthenticationCore();
@@ -29,15 +33,16 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseAuthentication();
-app.UseAuthorization();
+
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
 
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();

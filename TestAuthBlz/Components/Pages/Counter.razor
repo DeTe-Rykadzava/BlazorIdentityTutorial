@@ -1,0 +1,43 @@
+﻿@page "/counter"
+@using TestAuthBlz.Auth
+@using TestAuthBlz.Models
+@using Newtonsoft.Json
+@rendermode InteractiveServer
+@inject CustomAuthStateProvider authProvider
+@inject NavigationManager navManager
+@inject HttpClient client
+
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+<p role="status" class="text-danger">@_message</p>
+<br/>
+<button class="btn btn-primary" @onclick="Login">Login</button>
+
+@code {
+    private int currentCount = 0;
+    private string _message = "";
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+    
+    private async Task Login()
+    {
+        var result = await authProvider.LoginAsync(new SignInModel{ Email = "dete@gmail.com", Password = "dete"});
+        if (!result.IsSuccess)
+        {
+            _message = result.Message;
+            return;
+        }
+        
+        navManager.NavigateTo($"api/auth/sign_in/context/{result.Token}");
+    }
+}

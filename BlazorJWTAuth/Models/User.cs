@@ -4,6 +4,8 @@ namespace BlazorJWTAuth.Models;
 
 public class User
 {
+    public static List<User> Users { get; } = new List<User> { new User(){ Username = "Dete@gmail.com", Password = "dete", Age = 19, Roles = ["Admin"] } };
+
     public string Username { get; set; } = "";
     public string Password { get; set; } = "";
     public int Age { get; set; }

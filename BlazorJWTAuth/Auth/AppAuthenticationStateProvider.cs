@@ -1,25 +1,28 @@
 using System.Security.Claims;
 using BlazorJWTAuth.Models;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 namespace BlazorJWTAuth.Auth;
 
 public class AppAuthenticationStateProvider : AuthenticationStateProvider, IDisposable
 {
-    private readonly UserService _userService;
+    private readonly AuthUserService _authUserService;
+    private readonly ProtectedLocalStorage _localStorage;
 
     public User CurrentUser { get; private set; } = new();
 
-    public AppAuthenticationStateProvider(UserService userService)
+    public AppAuthenticationStateProvider(AuthUserService authUserService, ProtectedLocalStorage localStorage)
     {
-        _userService = userService;
+        _authUserService = authUserService;
+        _localStorage = localStorage;
         AuthenticationStateChanged += OnAuthenticationStateChangedAsync;
     }
 
     public async Task LoginAsync(string username, string password)
     {
         var principal = new ClaimsPrincipal();
-        var user = await _userService.SendAuthenticateRequestAsync(username, password);
+        var user = await _authUserService.SendAuthenticateRequestAsync(username, password);
 
         if (user != null)
         {
@@ -31,19 +34,19 @@ public class AppAuthenticationStateProvider : AuthenticationStateProvider, IDisp
 
     public void Logout()
     {
-        _userService.ClearBrowserUserData();
+        _authUserService.ClearBrowserUserData();
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(new())));
     }
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
         var principal = new ClaimsPrincipal();
-        var user = _userService.FetchUserFromBrowser();
+        var user = await _authUserService.FetchUserFromBrowser();
 
         if (user == null)
             return new AuthenticationState(principal);
 
-        var authenticatedUser = await _userService.SendAuthenticateRequestAsync(user.Username, user.Password);
+        var authenticatedUser = await _authUserService.SendAuthenticateRequestAsync(user.Username, user.Password);
         if(authenticatedUser == null)
             return new AuthenticationState(principal);
 
@@ -60,7 +63,7 @@ public class AppAuthenticationStateProvider : AuthenticationStateProvider, IDisp
         if(authenticationState == null)
             return;
         
-        User.FromClaimsPrincipal(authenticationState.User);
+        CurrentUser = User.FromClaimsPrincipal(authenticationState.User);
     }
 
     public void Dispose() => AuthenticationStateChanged -= OnAuthenticationStateChangedAsync;
